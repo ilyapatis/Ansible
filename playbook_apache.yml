@@ -1,0 +1,6 @@
+---
+- name: Deploy Apache Web Server with System Information
+  hosts: all
+  become: yes
+  roles:
+    - apache

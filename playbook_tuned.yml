@@ -1,0 +1,16 @@
+---
+- name: Install and configure tuned
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install tuned package
+      package:
+        name: tuned
+        state: present
+
+    - name: Start and enable tuned service
+      systemd:
+        name: tuned
+        state: started
+        enabled: yes

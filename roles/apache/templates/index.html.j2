@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>System Information</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .info { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .label { font-weight: bold; color: #333; }
+    </style>
+</head>
+<body>
+    <h1>System Information for {{ ansible_hostname }}</h1>
+
+    <div class="info">
+        <p><span class="label">Hostname:</span> {{ ansible_hostname }}</p>
+        <p><span class="label">IP Address:</span>
+            {% if ansible_default_ipv4.address %}
+                {{ ansible_default_ipv4.address }}
+            {% else %}
+                Not available
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="info">
+        <h3>CPU Information</h3>
+        <p><span class="label">CPU Model:</span> {{ ansible_processor[0] | default('Unknown') }}</p>
+        <p><span class="label">Cores:</span> {{ ansible_processor_cores | default('Unknown') }}</p>
+        <p><span class="label">Threads:</span> {{ ansible_processor_vcpus | default('Unknown') }}</p>
+    </div>
+
+    <div class="info">
+        <h3>Memory Information</h3>
+        <p><span class="label">Total RAM:</span> {{ (ansible_memtotal_mb / 1024) | round(2) }} GB ({{ ansible_memtotal_mb }} MB)</p>
+    </div>
+
+    <div class="info">
+        <h3>Storage Information</h3>
+        {% if ansible_devices %}
+            {% set first_disk = ansible_devices | first %}
+            <p><span class="label">First HDD:</span> {{ first_disk }} ({{ (ansible_devices[first_disk].size | replace('GB', '') | float) }} GB)</p>
+        {% else %}
+            <p><span class="label">First HDD:</span> Not available</p>
+        {% endif %}
+    </div>
+
+    <div class="info">
+        <h3>System Information</h3>
+        <p><span class="label">OS:</span> {{ ansible_distribution }} {{ ansible_distribution_version }}</p>
+        <p><span class="label">Architecture:</span> {{ ansible_architecture }}</p>
+    </div>
+
+    <footer>
+        <p>Generated on {{ ansible_date_time.iso8601 }}</p>
+    </footer>
+</body>
+</html>

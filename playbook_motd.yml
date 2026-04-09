@@ -1,0 +1,21 @@
+---
+- name: Change MOTD
+  hosts: all
+  become: true
+  vars:
+    motd_message: |
+      #########################################
+      #                                       #
+      #              Hello User!              #
+      #                                       #
+      #########################################
+      This system is managed by Ansible.
+
+  tasks:
+    - name: Set MOTD content
+      copy:
+        dest: /etc/motd
+        content: "{{ motd_message }}"
+        owner: root
+        group: root
+        mode: '0644'
